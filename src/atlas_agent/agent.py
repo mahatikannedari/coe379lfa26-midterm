@@ -69,17 +69,30 @@ def run_agent(
             # inconsistent; otherwise return the model's final response.
             # raise NotImplementedError
             # start with returning an error
-            validation_error = validate_final_response(decision.response, trace)
-            if validation_error:
+            # validation_error = validate_final_response(decision.response, trace)
+            # if validation_error:
+            #     return _failed(
+            #         f"The model's final response is inconsistent: {validation_error}",
+            #         trace,
+            #         "invalid_final_response",
+            #     )
+            # return AgentRun(
+            #     response=decision.response,
+            #     trace=trace,
+            #     termination_reason=decision.response.status,
+            # )
+
+            errors = validate_final_response(decision.response, trace)
+            if errors:
                 return _failed(
-                    f"The model's final response is inconsistent: {validation_error}",
+                    f"The model's final response is inconsistent: {errors}",
                     trace,
                     "invalid_final_response",
                 )
             return AgentRun(
                 response=decision.response,
                 trace=trace,
-                termination_reason=decision.response.status,
+                termination_reason="model_finished",
             )
 
         if not isinstance(decision, ToolCallDecision):
