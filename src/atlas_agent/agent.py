@@ -45,7 +45,7 @@ def run_agent(
         try:
             # TODO 2.1: Ask llm for one decision validated by DecisionAdapter.
             decision = llm.generate(messages=messages, response_model=DecisionAdapter)
-            # raise NotImplementedError
+
         except (ValidationError, ValueError, TypeError, RuntimeError) as exc:
             return _failed(
                 f"The model did not produce a valid decision: {exc}",
@@ -63,7 +63,6 @@ def run_agent(
                 trace=trace,
                 termination_reason="clarification_required",
             )
-            # raise NotImplementedError
 
         if isinstance(decision, FinalDecision):
             # TODO 2.3: Validate the final response. Return a failed run if it is
@@ -90,7 +89,6 @@ def run_agent(
 
         # TODO 2.4: Call validate_proposed_tool_call. If it returns errors,
         # create an action_gate_denied observation. Otherwise dispatch the tool.
-        # raise NotImplementedError
         # intialixe the gate error we will receive
         errors = validate_proposed_tool_call(
             decision, request=request, trace=trace
@@ -107,7 +105,6 @@ def run_agent(
 
         # TODO 2.5: Create and append a TraceEvent. Set mutating by consulting
         # MUTATING_TOOLS rather than hard-coding one tool name.
-        # raise NotImplementedError
         # creating the event
         event = TraceEvent(
             step=step,
@@ -119,14 +116,12 @@ def run_agent(
 
         # TODO 2.6: Append the serialized decision as an assistant message and
         # the serialized observation as a tool message.
-        # raise NotImplementedError
         # seralized decision -> assitant message
         messages.append({"role": "assistant", "content": decision.model_dump_json()})
         # serialized output -> tool message
         messages.append({"role": "tool", "content": observation.model_dump_json()})
 
     # TODO 2.7: Return an explicit maximum_steps_exceeded failure.
-    # raise NotImplementedError
     # need to write messages to output the max steps exceeded
     return _failed(
         "The agent did not reach a final decision within the maximum number of steps.",
